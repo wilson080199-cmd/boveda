@@ -146,11 +146,17 @@
     <div class="tab" data-tab="images">Fotos</div>
     <div class="tab" data-tab="videos">Videos</div>
   </div>
-  <div class="upload-zone" id="uploadZone">
-    <input type="file" id="fileInput" accept="image/*,video/*" multiple>
-    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    <p>Subir fotos y videos</p>
-    <span>Todo se guarda en tu dispositivo</span>
+  <div style="display:flex;gap:10px;margin:16px;margin-bottom:0;">
+    <div class="upload-zone" id="uploadZone" style="margin:0;flex:1;">
+      <input type="file" id="fileInput" accept="image/*" multiple capture="false">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+      <p>Fotos</p>
+    </div>
+    <div class="upload-zone" id="uploadZoneVideo" style="margin:0;flex:1;">
+      <input type="file" id="fileInputVideo" accept="video/*" multiple>
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <p>Videos</p>
+    </div>
   </div>
   <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="gallery" id="gallery"></div>
@@ -300,6 +306,14 @@
   uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
   uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
   fileInput.addEventListener('change', () => { handleFiles(fileInput.files); fileInput.value = ''; });
+
+  // Video input separado para compatibilidad con PWA instalada
+  const fileInputVideo = document.getElementById('fileInputVideo');
+  const uploadZoneVideo = document.getElementById('uploadZoneVideo');
+  uploadZoneVideo.addEventListener('dragover', e => { e.preventDefault(); uploadZoneVideo.classList.add('drag-over'); });
+  uploadZoneVideo.addEventListener('dragleave', () => uploadZoneVideo.classList.remove('drag-over'));
+  uploadZoneVideo.addEventListener('drop', e => { e.preventDefault(); uploadZoneVideo.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+  fileInputVideo.addEventListener('change', () => { handleFiles(fileInputVideo.files); fileInputVideo.value = ''; });
 
   function handleFiles(files) {
     const arr = Array.from(files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
